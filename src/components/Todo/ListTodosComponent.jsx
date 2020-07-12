@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import TodoDataService from '../../api/todo/TodoDataService.js';
 import AuthenticationService from './AuthenticationService.js';
 import moment from 'moment-timezone';
+import Pagination from 'react-js-pagination';
 
 class ListTodosComponent extends Component {
     constructor(props) {
@@ -9,12 +10,17 @@ class ListTodosComponent extends Component {
         this.state = {
             todos: [],
             message: null,
+            activePage: 1,
+            totalPages: null,
+            itemsCountPerPage: null,
+            totalItemsCount: 0,
         }
 
         this.deleteTodoClicked = this.deleteTodoClicked.bind(this);
         this.refreshTodos = this.refreshTodos.bind(this);
         this.updateTodoClicked = this.updateTodoClicked.bind(this);
         this.addTodoClicked = this.addTodoClicked.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
     }
 
     componentDidMount() {
@@ -23,10 +29,15 @@ class ListTodosComponent extends Component {
 
     refreshTodos() {
         let username = AuthenticationService.getLoggedInUserName();
-        TodoDataService.retrieveAllTodos(username)
+        TodoDataService.retrieveAllTodos(username, this.state.activePage)
         .then(
             response => {
-                this.setState({ todos: response.data })
+                this.setState({ 
+                    todos: response.data.content,
+                    totalPages: response.data.totalPages,
+                    totalItemsCount: response.data.totalElements,
+                    itemsCountPerPage: response.data.size,
+                 })
             }
         )
     }
@@ -49,6 +60,10 @@ class ListTodosComponent extends Component {
 
     addTodoClicked() {
         this.props.history.push('/todos/-1');
+    }
+
+    handlePageChange(pageNumber) {
+        this.setState({activePage: pageNumber}, () => this.refreshTodos());
     }
 
     render() {
@@ -84,6 +99,21 @@ class ListTodosComponent extends Component {
                     </table>
                     <div className="row">
                         <button className="btn btn-success" onClick={this.addTodoClicked}>Add</button>
+                    </div>
+                    <div className="d-flex justify-content-center">
+                        <Pagination
+                            prevPageText='Previous'
+                            nextPageText='Next' 
+                            firstPageText='First'
+                            lastPageText='Last'
+                            activePage={this.state.activePage}
+                            itemsCountPerPage={this.state.itemsCountPerPage}
+                            totalItemsCount={this.state.totalItemsCount}
+                            pageRangeDisplayed={10}
+                            itemClass='page-item'
+                            linkClass='page-link'
+                            onChange={this.handlePageChange}
+                        />
                     </div>
                 </div>
             </div>

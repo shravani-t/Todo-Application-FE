@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { JPA_API_URL } from '../../constants';
+import { JPA_API_URL, PAGE_SIZE } from '../../constants';
 
 class TodoDataService {
 
-    retrieveAllTodos(name) {
-        return axios.get(`${JPA_API_URL}/users/${name}/todos`);
+    retrieveAllTodos(name, pageNumber) {
+        return axios.get(`${JPA_API_URL}/users/${name}/todos?page=${pageNumber}&size=${PAGE_SIZE}`);
     }
 
     retrieveTodo(name, id) {
