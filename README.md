@@ -1,4 +1,14 @@
+This is a basic Todo Application project. The application provides you to view and manage your todos.<br />
+This repo has the Front End code for the project developed in React.<br />
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Steps to setup the project
+
+- The application's back end services are present in Todo-Application-Service repo.<br />
+  Clone the project and start the RestfulWebServices.
+- once the services are running in http://localhost:8080 navigate to Todo-Application-FE and start the React application
+- Run npm start to start the Front End Application and navigate to http://localhost:4200
+- Currently the application has only one account, The username is shravani and the password is dummy.
 
 ## Available Scripts
 
