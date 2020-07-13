@@ -10,7 +10,7 @@ class TodoComponent extends Component {
         this.state = {
             id: this.props.match.params.id,
             description: '',
-            targetDate: moment(new Date()).format('YYYY-MM-DD'),
+            targetDate: moment(new Date()).format('MM-DD-YYYY'),
 
         }
         
@@ -20,52 +20,64 @@ class TodoComponent extends Component {
     
     onSubmit(values) {
         let username = AuthenticationService.getLoggedInUserName();
+        const { id } = this.state;
+        const {history} = this.props;
+        const {description, targetDate } = values;
 
         let todo = {
-            id: this.state.id,
-            description: values.description,
-            targetDate: moment(values.targetDate).format(),
+            id: id,
+            description: description,
+            targetDate: moment(targetDate).format(),
         }
-        if(this.state.id === -1) {
+        if(id === -1) {
             TodoDataService.createTodo(username, todo)
-            .then( () => this.props.history.push('/todos') )
+            .then( () => history.push('/todos') )
         } else {
-            TodoDataService.updateTodo(username, this.state.id, todo)
-            .then( () => this.props.history.push('/todos') )
+            TodoDataService.updateTodo(username, id, todo)
+            .then( () => history.push('/todos') )
         }
         console.log(values);
     }
 
     validate(values) {
         let errors = {}
-        if(!values.description) {
+        const {description, targetDate } = values;
+
+        if(!description) {
             errors.description = 'Enter a description';
-        } else if(values.description.length < 5) {
+        } else if(description.length < 5) {
             errors.description = 'Enter atleast 5 Characters in description';
         }
 
-        if(!moment(values.targetDate).isValid()) {
+        if(!moment(targetDate).isValid()) {
             errors.targetDate = 'Enter a valid target date';
         }
         return errors;
     }
 
     componentDidMount() {
-        if(this.state.id === -1) {
+        const { id } = this.state
+
+        if(id === -1) {
             return;
         }
 
         //const currentTimeZone = moment.tz.guess();
         let username = AuthenticationService.getLoggedInUserName();
-        TodoDataService.retrieveTodo(username, this.state.id)
-        .then( response => this.setState({ 
-            description: response.data.description,
-            targetDate: moment(response.data.targetDate).format('YYYY-MM-DD'),
-        }) )
+        TodoDataService.retrieveTodo(username, id)
+        .then( response => {
+            const { description, targetDate } = response.data
+
+            this.setState({ 
+                description: description,
+                targetDate: moment(targetDate).format('MM-DD-YYYY'),
+            }) 
+        })
     }
 
     render() {
         const { description, targetDate } = this.state;
+        const { onSubmit, validate } = this;
         return (
             <div>
                 <h1>Todo</h1>
@@ -75,10 +87,10 @@ class TodoComponent extends Component {
                             description,
                             targetDate,
                         }}
-                        onSubmit={this.onSubmit}
+                        onSubmit={onSubmit}
                         validateOnChange={false}
                         validateOnBlur={false}
-                        validate= {this.validate}
+                        validate= {validate}
                         enableReinitialize={true}
                     >
                         {

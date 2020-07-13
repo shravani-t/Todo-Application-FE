@@ -29,14 +29,17 @@ class ListTodosComponent extends Component {
 
     refreshTodos() {
         let username = AuthenticationService.getLoggedInUserName();
-        TodoDataService.retrieveAllTodos(username, this.state.activePage)
+        const { activePage } = this.state;
+
+        TodoDataService.retrieveAllTodos(username, activePage)
         .then(
             response => {
+                const { content, totalPages, totalElements, size } = response.data;
                 this.setState({ 
-                    todos: response.data.content,
-                    totalPages: response.data.totalPages,
-                    totalItemsCount: response.data.totalElements,
-                    itemsCountPerPage: response.data.size,
+                    todos: content,
+                    totalPages: totalPages,
+                    totalItemsCount: totalElements,
+                    itemsCountPerPage: size,
                  })
             }
         )
@@ -47,8 +50,10 @@ class ListTodosComponent extends Component {
         TodoDataService.deleteTodo(username, id)
         .then(
             response => {
-                this.setState({ message: `delete of Todo ${id} successful`});
-                this.refreshTodos();
+                this.setState(
+                    { message: `delete of Todo ${id} successful`}, 
+                    () => this.refreshTodos()
+                );
             }
         )
 
@@ -67,11 +72,26 @@ class ListTodosComponent extends Component {
     }
 
     render() {
+        const { 
+            message, 
+            todos, 
+            activePage, 
+            itemsCountPerPage, 
+            totalItemsCount 
+        } = this.state
+
+        const {
+            updateTodoClicked,
+            deleteTodoClicked,
+            addTodoClicked,
+            handlePageChange
+        } = this
+
         return (
-            <div>
-                <h1>List Todos</h1>
-                {this.state.message && <div className="alert alert-success">{this.state.message}</div>}
-                <div className="container">
+            <div className="h-100">
+                <h1>Todos List</h1>
+                {message && <div className="alert alert-success">{message}</div>}
+                <div className="container h-100">
                     <table className="table">
                         <thead>
                             <tr>
@@ -84,21 +104,21 @@ class ListTodosComponent extends Component {
                         </thead>
                         <tbody>
                             {
-                                this.state.todos.map(
+                                todos.map(
                                     todo => 
                                         <tr key={todo.id}>
                                             <td>{todo.description}</td>
-                                            <td>{moment(todo.targetDate).format('YYYY-MM-DD')}</td>
+                                            <td>{moment(todo.targetDate).format('MM-DD-YYYY')}</td>
                                             <td>{todo.done.toString()}</td>
-                                            <td><button className="btn btn-success" onClick={() => this.updateTodoClicked(todo.id)}>Update</button></td>
-                                            <td><button className="btn btn-warning" onClick={() => this.deleteTodoClicked(todo.id)}>Delete</button></td>
+                                            <td><button className="btn btn-success" onClick={() => updateTodoClicked(todo.id)}>Update</button></td>
+                                            <td><button className="btn btn-warning" onClick={() => deleteTodoClicked(todo.id)}>Delete</button></td>
                                         </tr>
                                 )
                             }
                         </tbody>
                     </table>
                     <div className="row">
-                        <button className="btn btn-success" onClick={this.addTodoClicked}>Add</button>
+                        <button className="btn btn-success" onClick={addTodoClicked}>Add Todo</button>
                     </div>
                     <div className="d-flex justify-content-center">
                         <Pagination
@@ -106,13 +126,13 @@ class ListTodosComponent extends Component {
                             nextPageText='Next' 
                             firstPageText='First'
                             lastPageText='Last'
-                            activePage={this.state.activePage}
-                            itemsCountPerPage={this.state.itemsCountPerPage}
-                            totalItemsCount={this.state.totalItemsCount}
+                            activePage={activePage}
+                            itemsCountPerPage={itemsCountPerPage}
+                            totalItemsCount={totalItemsCount}
                             pageRangeDisplayed={10}
                             itemClass='page-item'
                             linkClass='page-link'
-                            onChange={this.handlePageChange}
+                            onChange={handlePageChange}
                         />
                     </div>
                 </div>

@@ -17,15 +17,17 @@ class TodoApp extends Component {
                 <Router>
                     <>
                         <HeaderComponent />
-                        <Switch>
-                            <Route path="/" exact component={LoginComponent} />
-                            <Route path="/login" component={LoginComponent} />
-                            <AuthenticatedRoute path="/welcome/:name" component={WelcomeComponent} />
-                            <AuthenticatedRoute path="/todos/:id" component={TodoComponent} />
-                            <AuthenticatedRoute path="/todos" component={ListTodosComponent} />
-                            <AuthenticatedRoute path="/logout" component={LogoutComponent} />
-                            <Route component={ErrorComponent} />
-                        </Switch>
+                        <div className="main-component">
+                            <Switch>
+                                <Route path="/" exact component={LoginComponent} />
+                                <Route path="/login" component={LoginComponent} />
+                                <AuthenticatedRoute path="/welcome/:name" component={WelcomeComponent} />
+                                <AuthenticatedRoute path="/todos/:id" component={TodoComponent} />
+                                <AuthenticatedRoute path="/todos" component={ListTodosComponent} />
+                                <AuthenticatedRoute path="/logout" component={LogoutComponent} />
+                                <Route component={ErrorComponent} />
+                            </Switch>
+                        </div>
                         <FooterComponent />
                     </>
                 </Router>

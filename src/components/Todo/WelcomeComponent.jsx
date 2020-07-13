@@ -12,34 +12,26 @@ class WelcomeComponent extends Component {
         this.handleSuccessfulResponse = this.handleSuccessfulResponse.bind(this);
         this.handleError = this.handleError.bind(this);
     }
+
     render() {
+        const { match } = this.props
+
         return (
             <React.Fragment>
                 <h1>Welcome!</h1>
                 <div className="container">
-                    Welcome {this.props.match.params.name}. You can manage your Todos <Link to="/todos">here</Link>
-                </div>
-                <div className="container">
-                    Click here to get a customized message.
-                    <button onClick={this.retrieveWelcomeMessage} className="btn btn-success">Get welcome message</button>
-                </div>
-                <div className="container">
-                    {this.state.welcomeMessage}
+                    Welcome {match.params.name}. You can manage your Todos <Link to="/todos">here</Link>
                 </div>
             </React.Fragment>
         );
     }
 
     retrieveWelcomeMessage() {
-       // HelloWorldService.executeHelloWorldService()
-        // .then( response => this.handleSuccessfulResponse(response) );
-
-        // HelloWorldService.executeHelloWorldBeanService()
-        // .then( response => this.handleSuccessfulResponse(response) );
-
-        HelloWorldService.executeHelloWorldPathVariableService(this.props.match.params.name)
-        .then( response => this.handleSuccessfulResponse(response) )
-        .catch( error => this.handleError(error) );
+        const { handleSuccessfulResponse, handleError } = this;
+        const { match } = this.props
+        HelloWorldService.executeHelloWorldPathVariableService(match.params.name)
+        .then( response => handleSuccessfulResponse(response) )
+        .catch( error => handleError(error) );
     }
 
     handleSuccessfulResponse(response) {
@@ -47,12 +39,14 @@ class WelcomeComponent extends Component {
     }
 
     handleError(error) {
+        const { message, response } = error
+
         let errorMessage = '';
-        if(error.message) {
-            errorMessage += error.message;
+        if(message) {
+            errorMessage += message;
         }
-        if(error.response && error.response.data) {
-            errorMessage += error.response.data.message;
+        if(response?.data) {
+            errorMessage += response.data.message;
         }
         this.setState({ welcomeMessage: errorMessage })
     }

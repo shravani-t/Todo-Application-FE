@@ -7,9 +7,8 @@ class HeaderComponent extends Component {
     render() {
         const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
         return(
-            <header>
+            <header className="header">
                 <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-                    <div><a href="https://www.in28Minutes.com" className="navbar-brand">in28Minutes</a></div>
                     <ul className="navbar-nav">
                         {isUserLoggedIn && <li><Link to="/welcome/shravani" className="nav-link">Home</Link></li>}
                         {isUserLoggedIn && <li><Link to="/todos" className="nav-link">Todos</Link></li>}

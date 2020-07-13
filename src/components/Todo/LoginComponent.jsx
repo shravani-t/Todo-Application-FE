@@ -11,8 +11,6 @@ class LoginComponent extends Component {
             showSuccessMessage: false,
         }
 
-        // this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        // this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.loginClicked = this.loginClicked.bind(this);
     }
@@ -27,14 +25,6 @@ class LoginComponent extends Component {
             username, 
             password, 
         } = this.state;
-
-        /*if(username === 'shravani' && password === 'dummy') {
-            AuthenticationService.registerSuccessfulLogin(username, password);
-            this.props.history.push(`/welcome/${username}`);
-            // this.setState({hasLoginFailed: false, showSuccessMessage: true});
-        } else {
-            this.setState({hasLoginFailed: true, showSuccessMessage: false});
-        }*/
 
         // if you use basic authentication service
         // AuthenticationService.executeBasicAuthenticationService(username, password)
@@ -55,25 +45,53 @@ class LoginComponent extends Component {
         });
     }
 
-    // handleUsernameChange(event) {
-    //     this.setState({username: event.target.value})
-    // }
-
-    // handlePasswordChange(event) {
-    //     this.setState({password: event.target.value});
-    // }
     render() {
+        const {
+            hasLoginFailed,
+            showSuccessMessage,
+            username,
+            password,
+        } = this.state
+        const {
+            handleChange,
+            loginClicked
+        } = this
+
         return(
             <div>
                 <h1>Login</h1>
-                <div className="container">
-                    {/*<ShowInvalidCredentials hasLoginFailed={this.state.hasLoginFailed} />
-                    <ShowLoginSuccessMessage showSuccessMessage={this.state.showSuccessMessage} />*/}
-                    {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
-                    {this.state.showSuccessMessage && <div>Login Successful</div>}
-                    User Name: <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
-                    Password: <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
-                    <button className="btn btn-success" onClick={this.loginClicked}>Login</button>
+                <div className="container justify-content-*-between">
+                    {hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
+                    {showSuccessMessage && <div>Login Successful</div>}
+                    <div className="form-horizontal">
+                        <div className="form-group">
+                            <label htmlFor="username">User Name: </label>
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                name="username" 
+                                value={username} 
+                                onChange={handleChange} 
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password: </label>
+                            <input 
+                                type="password" 
+                                className="form-control"
+                                name="password" 
+                                value={password} 
+                                onChange={handleChange} 
+                            />
+                        </div>
+                        <button 
+                            type="submit" 
+                            className="btn btn-success" 
+                            onClick={loginClicked}
+                        >
+                            Login
+                        </button>
+                    </div>
                 </div>
             </div>
         );
