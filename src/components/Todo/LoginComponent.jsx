@@ -64,21 +64,21 @@ class LoginComponent extends Component {
                     {hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
                     {showSuccessMessage && <div>Login Successful</div>}
                     <div className="form-horizontal">
-                        <div className="form-group">
+                        <div className="form-group text-center">
                             <label htmlFor="username">User Name: </label>
                             <input 
                                 type="text" 
-                                className="form-control" 
+                                className="form-control w-50 m-auto" 
                                 name="username" 
                                 value={username} 
                                 onChange={handleChange} 
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="form-group text-center">
                             <label htmlFor="password">Password: </label>
                             <input 
                                 type="password" 
-                                className="form-control"
+                                className="form-control w-50 m-auto"
                                 name="password" 
                                 value={password} 
                                 onChange={handleChange} 
