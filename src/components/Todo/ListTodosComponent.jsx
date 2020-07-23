@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import TodoDataService from '../../api/todo/TodoDataService.js';
 import AuthenticationService from './AuthenticationService.js';
+import Message from './Message';
 import moment from 'moment-timezone';
 import Pagination from 'react-js-pagination';
+import { MESSAGE_TIMEOUT } from '../../constants'
 
 class ListTodosComponent extends Component {
     constructor(props) {
@@ -90,7 +92,11 @@ class ListTodosComponent extends Component {
         return (
             <div className="h-100">
                 <h1>Todos List</h1>
-                {message && <div className="alert alert-success">{message}</div>}
+                {message && 
+                    <Message delay={MESSAGE_TIMEOUT} className="alert alert-success">
+                        {message}
+                    </Message>
+                }
                 <div className="container h-100">
                     <table className="table">
                         <thead>
